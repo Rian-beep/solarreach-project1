@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/director.schema.json",
+  "title": "Director",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "company_id", "full_name", "role", "source", "created_at"],
+  "properties": {
+    "_id": { "type": "string" },
+    "company_id": { "type": "string" },
+    "full_name": { "type": "string" },
+    "role": { "type": "string" },
+    "appointed_on": { "type": ["string", "null"], "format": "date-time" },
+    "resigned_on": { "type": ["string", "null"], "format": "date-time" },
+    "email": { "type": ["string", "null"] },
+    "linkedin_url": { "type": ["string", "null"] },
+    "inferred_decision_maker": { "type": "boolean" },
+    "decision_maker_confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "source": { "enum": ["companies_house", "hunter", "manual", "synthesized"] },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

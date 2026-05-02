@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/lead.schema.json",
+  "title": "Lead",
+  "description": "A scored building. Central object of the SolarReach domain.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "_id",
+    "client_slug",
+    "name",
+    "premises_type",
+    "address",
+    "postcode",
+    "geo",
+    "composite_score",
+    "score_breakdown",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "_id": { "type": "string" },
+    "client_slug": { "type": "string" },
+    "name": { "type": "string" },
+    "premises_type": { "type": "string" },
+    "address": { "type": "string" },
+    "postcode": { "type": "string", "pattern": "^[A-Z]{1,2}\\d[A-Z\\d]?\\s?\\d[A-Z]{2}$" },
+    "geo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["point"],
+      "properties": {
+        "point": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "enum": ["Point"] },
+            "coordinates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "rooftop_polygon": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "enum": ["Polygon"] },
+            "coordinates": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rooftop_polygon_source": {
+      "enum": ["inspire_index_polygon", "solar_api_bbox", "synthesized"]
+    },
+    "inspire_id": { "type": ["string", "null"] },
+    "company_id": { "type": ["string", "null"] },
+    "composite_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "score_breakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["solar_roi", "financial_health", "social_impact"],
+      "properties": {
+        "solar_roi": { "type": "number" },
+        "financial_health": { "type": "number" },
+        "social_impact": { "type": "number" }
+      }
+    },
+    "panel_layout": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["center", "azimuth_deg", "width_m", "height_m", "yearly_kwh"],
+        "properties": {
+          "center": {
+            "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" }
+          },
+          "azimuth_deg": { "type": "number" },
+          "width_m": { "type": "number" },
+          "height_m": { "type": "number" },
+          "yearly_kwh": { "type": "number" }
+        }
+      }
+    },
+    "financial": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capex_gbp", "annual_saving_gbp", "payback_years", "npv_25yr_gbp"],
+          "properties": {
+            "capex_gbp": { "type": "number" },
+            "annual_saving_gbp": { "type": "number" },
+            "payback_years": { "type": "number" },
+            "npv_25yr_gbp": { "type": "number" },
+            "irr_pct": { "type": ["number", "null"] }
+          }
+        }
+      ]
+    },
+    "annual_kwh": { "type": ["number", "null"] },
+    "panels_count": { "type": "integer", "minimum": 0 },
+    "enriched_at": { "type": ["string", "null"], "format": "date-time" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

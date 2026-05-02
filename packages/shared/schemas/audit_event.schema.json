@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/audit_event.schema.json",
+  "title": "AuditEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "ts", "actor", "action", "cost_cents"],
+  "properties": {
+    "_id": { "type": "string" },
+    "ts": { "type": "string", "format": "date-time" },
+    "actor": { "type": "string" },
+    "action": { "type": "string" },
+    "lead_id": { "type": ["string", "null"] },
+    "client_slug": { "type": ["string", "null"] },
+    "cost_cents": { "type": "integer", "minimum": 0 },
+    "recipient_hash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+    "metadata": { "type": "object" }
+  }
+}

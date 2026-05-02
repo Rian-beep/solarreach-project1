@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: solarreach-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-change-me-on-first-run}
+      MONGO_INITDB_DATABASE: solarreach
+      # Surfaced into the init scripts:
+      SOLARREACH_DB_USER: ${SOLARREACH_DB_USER:-solarreach_app}
+      SOLARREACH_DB_PASSWORD: ${SOLARREACH_DB_PASSWORD:-change-me-in-prod}
+    volumes:
+      - solarreach_mongo_data:/data/db
+      # Init scripts run in lexical order on FIRST boot only.
+      # If you change schema after first boot, drop the volume or run them
+      # manually via mongosh.
+      - ./infra/mongodb/01-users.js:/docker-entrypoint-initdb.d/01-users.js:ro
+      - ./infra/mongodb/02-collections.js:/docker-entrypoint-initdb.d/02-collections.js:ro
+      - ./infra/mongodb/03-validators.js:/docker-entrypoint-initdb.d/03-validators.js:ro
+      - ./infra/mongodb/04-indexes.js:/docker-entrypoint-initdb.d/04-indexes.js:ro
+      - ./infra/mongodb/05-agent-databases.js:/docker-entrypoint-initdb.d/05-agent-databases.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+volumes:
+  solarreach_mongo_data:
+    driver: local

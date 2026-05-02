@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/company.schema.json",
+  "title": "Company",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "proprietor_name", "source", "created_at", "updated_at"],
+  "properties": {
+    "_id": { "type": "string" },
+    "proprietor_name": { "type": "string" },
+    "company_number": { "type": ["string", "null"], "pattern": "^[A-Z0-9]{8}$" },
+    "incorporation_country": { "type": ["string", "null"] },
+    "registered_address": { "type": ["string", "null"] },
+    "sic_codes": { "type": "array", "items": { "type": "string" } },
+    "accounts_summary": { "type": ["object", "null"] },
+    "health_score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+    "embedding": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "array", "items": { "type": "number" }, "minItems": 1024, "maxItems": 1024 }
+      ]
+    },
+    "source": { "enum": ["ccod", "ocod", "companies_house", "synthesized"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

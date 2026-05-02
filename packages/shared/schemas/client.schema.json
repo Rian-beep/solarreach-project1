@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/client.schema.json",
+  "title": "Client",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "display_name", "primary_color", "accent_color", "created_at"],
+  "properties": {
+    "_id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "primary_color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "accent_color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "logo_url": { "type": ["string", "null"] },
+    "pricing_overrides": { "type": "object" },
+    "voice_agent_id": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

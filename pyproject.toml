@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solarreach-project1"
+version = "0.2.0"
+description = "SolarReach Project 1 — data foundation: schemas, ingest, scoring pipeline, deepagents-on-Mongo lead agent."
+requires-python = ">=3.12"
+authors = [{ name = "SolarReach team" }]
+readme = "README.md"
+license = { text = "Proprietary — internal hackathon code" }
+
+dependencies = [
+  # MongoDB
+  "pymongo>=4.8,<5",
+  "motor>=3.5,<4",                    # async driver for downstream API/voice
+  # Validation
+  "pydantic>=2.9,<3",
+  # Geo + ingest
+  "lxml>=5.2,<6",
+  "pyproj>=3.6,<4",
+  "shapely>=2.0,<3",
+  # HTTP
+  "httpx>=0.27,<1",
+  # Stdlib-adjacent helpers
+  "typing-extensions>=4.12; python_version<'3.13'",
+]
+
+[project.optional-dependencies]
+# Agent stack — heavy. Install separately so non-agent users (Project 2 UI,
+# Project 4 telemetry) don't have to pull in deepagents + langgraph just to
+# import the shared models.
+agent = [
+  "deepagents>=0.4,<1",
+  "langchain>=0.3,<1",
+  "langchain-core>=0.3,<1",
+  "langchain-anthropic>=0.2,<1",            # default model provider
+  "langchain-mongodb>=0.2,<1",              # toolkit, retrievers, vector store
+  "langgraph>=0.2,<1",
+  "langgraph-checkpoint-mongodb>=0.1,<1",   # MongoDBSaver
+  "langgraph-store-mongodb>=0.1,<1",        # MongoDBStore (long-term memory)
+]
+
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-asyncio>=0.23,<1",
+  "mongomock>=4.2,<5",                       # for tests of mongo tool wrappers
+  "ruff>=0.6,<1",
+  "mypy>=1.11,<2",
+]
+
+[project.scripts]
+solarreach-seed                = "scripts.seed:main"
+solarreach-ingest-lr           = "scripts.ingest_land_registry:main"
+solarreach-ingest-inspire      = "scripts.ingest_inspire:main"
+solarreach-match-inspire       = "scripts.match_leads_to_inspire:main"
+solarreach-agent-run           = "scripts.run_lead_agent:main"
+
+[tool.setuptools]
+
+[tool.setuptools.package-dir]
+solarreach_shared = "packages/shared/py/solarreach_shared"
+scoring_worker    = "packages/scoring/scoring_worker"
+lead_agent        = "packages/agents/lead_agent"
+scripts           = "scripts"
+
+[tool.setuptools.packages.find]
+where = ["packages/shared/py", "packages/scoring", "packages/agents", "."]
+include = ["solarreach_shared*", "scoring_worker*", "lead_agent*", "scripts*"]
+exclude = ["tests*", "infra*"]
+
+[tool.setuptools.package-data]
+solarreach_shared = ["../../schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+asyncio_mode = "auto"
+filterwarnings = [
+  "error::DeprecationWarning:solarreach_shared.*",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = ["E501"]

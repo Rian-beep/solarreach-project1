@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/land_registry.schema.json",
+  "title": "LandRegistryRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "title_number", "proprietor_name", "property_address", "source", "ingested_at"],
+  "properties": {
+    "_id": { "type": "string" },
+    "title_number": { "type": "string" },
+    "tenure": { "enum": ["Freehold", "Leasehold", null] },
+    "proprietor_name": { "type": "string" },
+    "proprietor_address": { "type": ["string", "null"] },
+    "company_registration_no": { "type": ["string", "null"] },
+    "country_incorporated": { "type": ["string", "null"] },
+    "property_address": { "type": "string" },
+    "postcode": { "type": ["string", "null"] },
+    "price_paid_gbp": { "type": ["integer", "null"] },
+    "date_proprietor_added": { "type": ["string", "null"], "format": "date-time" },
+    "multiple_address_indicator": { "type": "boolean" },
+    "source": { "enum": ["ccod", "ocod"] },
+    "ingested_at": { "type": "string", "format": "date-time" }
+  }
+}

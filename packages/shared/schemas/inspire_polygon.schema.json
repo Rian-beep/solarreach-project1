@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "solarreach://schemas/inspire_polygon.schema.json",
+  "title": "InspirePolygon",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_id", "inspire_id", "geometry", "centroid", "area_m2_approx", "ingested_at"],
+  "properties": {
+    "_id": { "type": "string" },
+    "inspire_id": { "type": "string" },
+    "title_no": { "type": ["string", "null"] },
+    "geometry": {
+      "type": "object",
+      "required": ["type", "coordinates"],
+      "properties": {
+        "type": { "enum": ["Polygon"] },
+        "coordinates": { "type": "array" }
+      }
+    },
+    "centroid": {
+      "type": "object",
+      "required": ["type", "coordinates"],
+      "properties": {
+        "type": { "enum": ["Point"] },
+        "coordinates": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+      }
+    },
+    "area_m2_approx": { "type": "number", "minimum": 0 },
+    "local_authority": { "type": ["string", "null"] },
+    "ingested_at": { "type": "string", "format": "date-time" }
+  }
+}

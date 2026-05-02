@@ -1,0 +1,47 @@
+# Environment + secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+.installed.cfg
+
+# Test + cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Mongo dump / data
+*.bson
+*.archive
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local notebooks / scratch
+scratch/
+*.ipynb_checkpoints/
